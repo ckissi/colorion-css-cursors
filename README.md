@@ -6,7 +6,8 @@ metaballs, radar reticles, anaglyph splits and other lesser-seen tricks. No
 frameworks, no dependencies, MIT licensed.
 
 Live at https://csscursors.colorion.co — part of the
-[Colorion](https://www.colorion.co) network.
+[Colorion](https://www.colorion.co) network. The project is hosted on
+[Sevalla](https://sevalla.com).
 
 ## How it works
 
