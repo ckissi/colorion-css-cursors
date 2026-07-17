@@ -1,0 +1,12 @@
+{
+  "name": "CSS Cursors",
+  "short_name": "CSS Cursors",
+  "description": "36 custom cursor effects built with CSS and a tiny universal tracker — magnetic rings, blend-mode discs, comet trails and more. MIT licensed.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08070F",
+  "theme_color": "#08070F",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

@@ -1,0 +1,464 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CursorDemo from '../components/CursorDemo.astro';
+import { cursors } from '../data/cursors';
+
+// The code snippets + LLM prompts are emitted as a static /cursor-data.json file
+// (see cursor-data.json.ts) and fetched on demand when the modal first opens,
+// so that text stays out of the initial HTML document.
+
+// Cross-promo: the other tools in the Colorion network, surfaced in the
+// persistent sidebar. `?ref=` attributes the referral back to this site.
+const REF = 'csscursors.colorion.co';
+const colorionLinks = [
+  { label: 'Colorion', href: 'https://www.colorion.co' },
+  { label: 'Two Color Combinations', href: 'https://2colors.colorion.co' },
+  { label: 'Animated CSS Buttons', href: 'https://animatedbuttons.colorion.co' },
+  { label: 'Curated Color Palettes', href: 'https://colorpalettes.colorion.co' },
+  { label: 'Pure CSS Loaders', href: 'https://cssloaders.colorion.co' },
+  { label: 'CSS Gradient Buttons', href: 'https://gradientbuttons.colorion.co' },
+  { label: 'CSS Color Gradients', href: 'https://gradients.colorion.co' },
+  { label: 'Kinetic CSS Animations', href: 'https://kinetics.colorion.co' },
+  { label: 'Material Design Colors', href: 'https://material.colorion.co' },
+  { label: 'Mobile Color Palettes', href: 'https://mobilepalette.colorion.co' },
+  { label: 'Color Palette Generator', href: 'https://palettegenerator.colorion.co' },
+  { label: 'CSS Text Effects', href: 'https://text-effects.colorion.co' },
+  { label: 'CSS Toggle Switches', href: 'https://toggles.colorion.co' },
+  { label: 'Pure CSS Tooltips', href: 'https://tooltips.colorion.co' },
+];
+---
+
+<Layout>
+  <aside class="site-sidebar" aria-label="Colorion tools">
+    <div class="sidebar-brand">
+      <div class="brand-mark">↖</div>
+      <div>
+        <span class="mono">CSS Cursors</span>
+        <strong>Colorion Tools</strong>
+      </div>
+    </div>
+    <button
+      class="sidebar-collapse"
+      type="button"
+      aria-label="Collapse Colorion tools sidebar"
+      aria-controls="colorion-sidebar-nav"
+      aria-expanded="true"
+    >
+      ‹
+    </button>
+    <button
+      class="sidebar-toggle"
+      type="button"
+      aria-label="Open Colorion tools menu"
+      aria-controls="colorion-sidebar-nav"
+      aria-expanded="false"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav class="sidebar-nav" id="colorion-sidebar-nav">
+      {
+        colorionLinks.map((link) => (
+          <a
+            class="mono"
+            href={`${link.href}?ref=${REF}`}
+            target="_blank"
+            rel="noopener"
+            referrerpolicy="no-referrer-when-downgrade"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+  </aside>
+
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="header-status mono">
+        <span class="pulse-dot"></span>
+        {cursors.length} cursors · MIT
+      </div>
+    </header>
+
+  <section class="hero">
+    <span class="hero-tag mono">CSS + a tiny tracker · Copy &amp; paste</span>
+    <h1>{cursors.length} <em>custom cursors</em>,<br />free to copy.</h1>
+    <p>
+      A library of {cursors.length} custom cursor effects — magnetic rings,
+      difference-blend discs, comet trails, gooey metaballs, radar reticles and
+      other lesser-seen tricks. Each is pure CSS driven by a ~20-line universal
+      pointer tracker: JavaScript only writes <code>--x</code>, <code>--y</code>,
+      <code>--angle</code> and <code>--speed</code> — every bit of lag, trailing
+      and easing is CSS. <strong>Hover any tile to try it.</strong> Copy the
+      self-contained <code>code</code>, or grab a ready-made <code>Prompt</code>
+      to have your coding agent recreate it. Everything paints with the
+      <code>--ink</code> colour tokens and respects
+      <code>prefers-reduced-motion</code>.
+    </p>
+  </section>
+
+  <main class="library">
+    <div class="panel">
+      <h2 class="sr-only">Custom cursor library</h2>
+      <div class="library-head">
+        <span class="mono">Hover a tile to try it · click to copy its code or prompt</span>
+        <span class="mono">{cursors.length} cursors</span>
+      </div>
+
+      <div class="grid" id="cursor-grid">
+        {
+          cursors.map((cursor) => (
+            <article
+              class="cell"
+              role="button"
+              tabindex="0"
+              data-type={cursor.type}
+              data-name={cursor.name}
+              data-index={cursor.index}
+              aria-label={`View code for ${cursor.name} cursor`}
+            >
+              <span class="cell-index mono">{cursor.index}</span>
+              <div class="cell-actions">
+                <button class="cell-action mono" type="button" data-action="prompt" tabindex="-1" aria-label={`Copy LLM prompt for ${cursor.name} cursor`}>◳ Prompt</button>
+                <button class="cell-action mono" type="button" data-action="css" tabindex="-1" aria-label={`View code for ${cursor.name} cursor`}>⧉ Code</button>
+              </div>
+              <div class="stage">
+                <CursorDemo cursor={cursor} />
+              </div>
+              <h3>{cursor.name}</h3>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="sentinel" id="sentinel" hidden>
+        <span class="mono">Loading more cursors…</span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span class="mono">CSS Cursors</span>
+    <nav class="footer-links mono">
+      <a href="https://colorion.co?ref=csscursors.colorion.co" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade">Colorion</a>
+      <a href="https://text-effects.colorion.co?ref=csscursors.colorion.co" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade">CSS Text Effects</a>
+      <a href="https://gradientbuttons.colorion.co?ref=csscursors.colorion.co" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade">Gradient Buttons</a>
+      <a href="https://cssloaders.colorion.co?ref=csscursors.colorion.co" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade">Pure CSS Loaders</a>
+    </nav>
+    <span class="mono">CSS + a tiny tracker · No dependencies · MIT licensed</span>
+    <a class="footer-badge" href="https://sevalla.com?ref=csscursors.colorion.co" target="_blank" rel="noopener">
+      <img src="/hosted-on-sevalla.png" alt="Hosted on Sevalla" width="230" height="73" loading="lazy" />
+    </a>
+  </footer>
+
+  <!-- Copy-to-clipboard modal -->
+  <div class="modal-overlay" id="css-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head">
+        <div class="modal-title-group">
+          <span class="modal-index mono" id="modal-index"></span>
+          <h2 class="modal-title mono" id="modal-title"></h2>
+        </div>
+        <button class="modal-close mono" id="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-preview">
+        <div class="stage" id="modal-preview"></div>
+      </div>
+      <div class="modal-code-wrap">
+        <pre class="modal-code"><code id="modal-code"></code></pre>
+      </div>
+      <div class="modal-foot">
+        <span class="mono modal-hint" id="modal-hint">CSS + JS · self-contained</span>
+        <button class="modal-copy mono" id="modal-copy">Copy code</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metaball cursor (17) needs this gooey SVG filter present once in the page -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b"></feGaussianBlur>
+      <feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="g"></feColorMatrix>
+      <feComposite in="SourceGraphic" in2="g" operator="atop"></feComposite>
+    </filter>
+  </defs></svg>
+  </div>
+
+</Layout>
+
+<script>
+  // ---------- Universal pointer tracker ----------
+  // Custom cursors can't follow the mouse with CSS alone. This writes the four
+  // custom properties the CSS reads (--x/--y/--angle/--speed) and toggles
+  // .is-active (pointer inside) / .is-near (near the centre — magnetic cursor).
+  // Everything else — lag, trailing, easing — is pure CSS.
+  function bindCursor(box: HTMLElement) {
+    let lx = 0, ly = 0, has = false, idle: number | undefined;
+    const set = (p: string, v: string) => box.style.setProperty(p, v);
+    box.addEventListener('pointermove', (e) => {
+      const r = box.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      if (has) {
+        const dx = x - lx, dy = y - ly, d = Math.hypot(dx, dy);
+        if (d > 0.5) set('--angle', Math.atan2(dy, dx).toFixed(3) + 'rad');
+        set('--speed', Math.min(1, d / 32).toFixed(3));
+      }
+      set('--x', x.toFixed(1) + 'px');
+      set('--y', y.toFixed(1) + 'px');
+      box.classList.toggle('is-near', Math.hypot(x - r.width / 2, y - r.height / 2) < 60);
+      box.classList.add('is-active');
+      lx = x; ly = y; has = true;
+      window.clearTimeout(idle);
+      idle = window.setTimeout(() => set('--speed', '0'), 120); // relax when the pointer stops
+    });
+    box.addEventListener('pointerleave', () => {
+      box.classList.remove('is-active', 'is-near');
+      set('--speed', '0');
+      has = false;
+    });
+  }
+  document.querySelectorAll<HTMLElement>('.cur').forEach(bindCursor);
+
+  // ---------- Lazy reveal + off-screen pause ----------
+  const BATCH = 12;
+  const cells = Array.from(document.querySelectorAll<HTMLElement>('.cell'));
+  const sentinel = document.getElementById('sentinel')!;
+
+  // mark lazy mode active so CSS can pause off-screen ambient animations;
+  // without JS everything stays visible (progressive enhancement)
+  document.documentElement.classList.add('lazy-enabled');
+
+  // pause/resume ambient animations as cells enter and leave the viewport
+  const visibility = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        entry.target.classList.toggle('in-view', entry.isIntersecting);
+      }
+    },
+    { rootMargin: '100px' }
+  );
+
+  // reveal cells in batches as the sentinel approaches the viewport
+  let shown = BATCH;
+  cells.slice(BATCH).forEach((cell) => cell.setAttribute('hidden', ''));
+  cells.slice(0, BATCH).forEach((cell) => visibility.observe(cell));
+
+  const loadMore = new IntersectionObserver(
+    (entries) => {
+      if (!entries[0].isIntersecting) return;
+      cells.slice(shown, shown + BATCH).forEach((cell) => {
+        cell.removeAttribute('hidden');
+        visibility.observe(cell);
+      });
+      shown += BATCH;
+      if (shown >= cells.length) {
+        loadMore.disconnect();
+        sentinel.remove();
+      }
+    },
+    { rootMargin: '300px' }
+  );
+
+  if (cells.length > BATCH) {
+    sentinel.removeAttribute('hidden');
+    loadMore.observe(sentinel);
+  }
+
+  // ---------- Copy-to-clipboard modal ----------
+  type Mode = 'css' | 'prompt';
+  type CursorData = { snippets: Record<string, string>; prompts: Record<string, string> };
+
+  // The code snippets + LLM prompts live in a static JSON file rather than inline,
+  // so they don't bloat the document. Fetched once, on first use.
+  let dataPromise: Promise<CursorData> | undefined;
+  const loadData = () =>
+    (dataPromise ??= fetch('/cursor-data.json').then((r) => r.json() as Promise<CursorData>));
+
+  const MODE_CONFIG: Record<Mode, { key: keyof CursorData; copyLabel: string; hint: string }> = {
+    css: { key: 'snippets', copyLabel: 'Copy code', hint: 'CSS + JS · self-contained' },
+    prompt: { key: 'prompts', copyLabel: 'Copy prompt', hint: 'LLM prompt · paste into your coding agent' },
+  };
+
+  // Warm the cache as soon as the user signals intent (pointer over the grid).
+  const grid = document.getElementById('cursor-grid');
+  grid?.addEventListener('pointerenter', loadData, { once: true });
+
+  const overlay = document.getElementById('css-modal')!;
+  const modalIndex = document.getElementById('modal-index')!;
+  const modalTitle = document.getElementById('modal-title')!;
+  const modalHint = document.getElementById('modal-hint')!;
+  const modalPreview = document.getElementById('modal-preview')!;
+  const modalCode = document.getElementById('modal-code')!;
+  const copyBtn = document.getElementById('modal-copy') as HTMLButtonElement;
+  const closeBtn = document.getElementById('modal-close')!;
+
+  let lastFocused: HTMLElement | null = null;
+  let copyReset: number | undefined;
+  let currentMode: Mode = 'css';
+  let currentText = ''; // the copyable text for the open modal ('' while loading)
+  let openToken = 0; // guards against races when switching cursors mid-fetch
+
+  async function openModal(cell: HTMLElement, mode: Mode = 'css') {
+    const type = cell.dataset.type!;
+    const config = MODE_CONFIG[mode];
+    const token = ++openToken;
+
+    // Show the modal shell immediately; the code text fills in once data loads.
+    currentMode = mode;
+    currentText = '';
+    modalIndex.textContent = cell.dataset.index || '';
+    modalTitle.textContent = cell.dataset.name || '';
+    modalHint.textContent = config.hint;
+    modalCode.textContent = 'Loading…';
+
+    // clone the live cursor demo for the preview and re-bind the tracker to it
+    const demoEl = cell.querySelector('.stage > *');
+    const clone = demoEl ? (demoEl.cloneNode(true) as HTMLElement) : null;
+    modalPreview.replaceChildren(clone ?? document.createTextNode(''));
+    if (clone?.classList.contains('cur')) bindCursor(clone);
+
+    copyBtn.textContent = config.copyLabel;
+    copyBtn.classList.remove('copied');
+
+    lastFocused = cell;
+    overlay.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+    copyBtn.focus();
+
+    let text = '';
+    try {
+      text = (await loadData())[config.key][type] || '';
+    } catch {
+      text = '';
+    }
+    if (token !== openToken) return; // a newer open superseded this one
+    currentText = text;
+    modalCode.textContent = text || 'Failed to load — please try again.';
+  }
+
+  function closeModal() {
+    overlay.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+    modalPreview.replaceChildren();
+    lastFocused?.focus();
+  }
+
+  async function copyCss() {
+    const text = currentText;
+    if (!text) return; // data not loaded yet (or failed) — nothing to copy
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // fallback for non-secure contexts
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    copyBtn.textContent = 'Copied ✓';
+    copyBtn.classList.add('copied');
+    window.clearTimeout(copyReset);
+    copyReset = window.setTimeout(() => {
+      copyBtn.textContent = MODE_CONFIG[currentMode].copyLabel;
+      copyBtn.classList.remove('copied');
+    }, 1800);
+  }
+
+  cells.forEach((cell) => {
+    cell.addEventListener('click', (e) => {
+      const action = (e.target as HTMLElement).closest<HTMLElement>('[data-action]');
+      openModal(cell, action?.dataset.action === 'prompt' ? 'prompt' : 'css');
+    });
+    cell.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(cell);
+      }
+    });
+  });
+
+  copyBtn.addEventListener('click', copyCss);
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !overlay.hasAttribute('hidden')) closeModal();
+  });
+
+  // ---------- Mobile Colorion hamburger ----------
+  const sidebar = document.querySelector<HTMLElement>('.site-sidebar');
+  const sidebarToggle = document.querySelector<HTMLButtonElement>('.sidebar-toggle');
+  const sidebarCollapse = document.querySelector<HTMLButtonElement>('.sidebar-collapse');
+  const sidebarNav = document.getElementById('colorion-sidebar-nav');
+
+  if (sidebar && sidebarToggle && sidebarNav) {
+    sidebar.classList.add('menu-enhanced');
+
+    const setSidebarOpen = (open: boolean) => {
+      sidebar.classList.toggle('is-open', open);
+      sidebarToggle.setAttribute('aria-expanded', String(open));
+      sidebarToggle.setAttribute(
+        'aria-label',
+        open ? 'Close Colorion tools menu' : 'Open Colorion tools menu'
+      );
+    };
+
+    sidebarToggle.addEventListener('click', () => {
+      setSidebarOpen(!sidebar.classList.contains('is-open'));
+    });
+
+    sidebarNav.querySelectorAll('a').forEach((a) => {
+      a.addEventListener('click', () => setSidebarOpen(false));
+    });
+
+    document.addEventListener('click', (e) => {
+      if (sidebar.classList.contains('is-open') && !sidebar.contains(e.target as Node)) {
+        setSidebarOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
+        setSidebarOpen(false);
+        sidebarToggle.focus();
+      }
+    });
+  }
+
+  // ---------- Desktop sidebar collapse ----------
+  if (sidebar && sidebarCollapse) {
+    const STORAGE_KEY = 'colorion-sidebar-collapsed';
+
+    const setSidebarCollapsed = (collapsed: boolean) => {
+      sidebar.classList.toggle('is-collapsed', collapsed);
+      sidebarCollapse.setAttribute('aria-expanded', String(!collapsed));
+      sidebarCollapse.setAttribute(
+        'aria-label',
+        collapsed ? 'Expand Colorion tools sidebar' : 'Collapse Colorion tools sidebar'
+      );
+      sidebarCollapse.textContent = collapsed ? '›' : '‹';
+      try {
+        localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
+      } catch {
+        // Ignore storage failures; the current interaction still works.
+      }
+    };
+
+    try {
+      setSidebarCollapsed(localStorage.getItem(STORAGE_KEY) === '1');
+    } catch {
+      setSidebarCollapsed(false);
+    }
+
+    sidebarCollapse.addEventListener('click', () => {
+      setSidebarCollapsed(!sidebar.classList.contains('is-collapsed'));
+    });
+  }
+</script>

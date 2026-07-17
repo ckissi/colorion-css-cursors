@@ -1,0 +1,15 @@
+---
+import { cursorMarkup } from '../utils/cursorCss';
+import type { Cursor } from '../data/cursors';
+
+interface Props {
+  cursor: Cursor;
+}
+
+const { cursor } = Astro.props;
+// Markup is generated once in cursorCss.ts so the live demo and the copyable
+// snippet are guaranteed identical.
+const html = cursorMarkup(cursor);
+---
+
+<Fragment set:html={html} />

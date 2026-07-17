@@ -1,0 +1,1533 @@
+/* Self-hosted fonts (latin subset) — same-origin and preloaded, so the hero
+   headline renders in Inter without a late swap that would delay LCP. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/inter-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/inter-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin-600-normal.woff2") format("woff2");
+}
+
+:root {
+  --primary: #FF4FD8;
+  --accent-2: #4FF8FF;
+  --background: #08070F;
+  --surface: #12101C;
+  --text-primary: #F5F2FF;
+  --text-secondary: #9E96B8;
+  --border: #262038;
+  --divider: #262038;
+  --base: 8px;
+  --gap: 16px;
+  --card-padding: 24px;
+  --section-padding: 80px;
+  --r-card: 16px;
+  --r-control: 8px;
+  --r-pill: 9999px;
+  --sidebar-width: 248px;
+  --sidebar-collapsed-width: 76px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Visually hidden, but available to assistive tech and the accessibility tree.
+   Used for structural headings that the visual design doesn't surface. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+body {
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Persistent Colorion sidebar ---------- */
+.site-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 20;
+  width: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--base) * 3);
+  padding: calc(var(--base) * 3);
+  background: color-mix(in srgb, var(--background) 94%, transparent);
+  color: var(--text-primary);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  transition: width .22s ease;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--base) * 1.5);
+  padding-bottom: calc(var(--base) * 3);
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-brand span {
+  display: block;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+
+.sidebar-brand strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-control);
+  background: linear-gradient(135deg, var(--primary), var(--accent-2));
+  display: grid;
+  place-items: center;
+  color: var(--background);
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+  font-size: 13px;
+  flex: 0 0 auto;
+}
+
+.sidebar-collapse {
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  align-self: flex-end;
+  margin-top: calc(var(--base) * -1.5);
+  color: var(--text-secondary);
+  background: color-mix(in srgb, var(--text-primary) 5%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--r-control);
+  cursor: pointer;
+  font: 600 20px/1 "JetBrains Mono", monospace;
+  transition: background .15s, border-color .15s, color .15s;
+}
+
+.sidebar-collapse:hover,
+.sidebar-collapse:focus-visible {
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  outline: none;
+}
+
+.sidebar-toggle {
+  display: none;
+}
+
+.sidebar-nav {
+  display: grid;
+  gap: 4px;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  min-height: 42px;
+  padding: var(--base) calc(var(--base) * 1.5);
+  color: var(--text-secondary);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--r-control);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  transition: background .15s, border-color .15s, color .15s;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a:focus-visible {
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  outline: none;
+}
+
+.page-shell {
+  min-height: 100vh;
+  margin-left: var(--sidebar-width);
+  transition: margin-left .22s ease;
+}
+
+@media (min-width: 861px) {
+  .site-sidebar.is-collapsed {
+    width: var(--sidebar-collapsed-width);
+    align-items: center;
+    padding-left: calc(var(--base) * 2);
+    padding-right: calc(var(--base) * 2);
+    overflow: hidden;
+  }
+
+  .site-sidebar.is-collapsed + .page-shell {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+
+  .site-sidebar.is-collapsed .sidebar-brand {
+    justify-content: center;
+    padding-bottom: calc(var(--base) * 2);
+  }
+
+  .site-sidebar.is-collapsed .sidebar-brand > div:not(.brand-mark),
+  .site-sidebar.is-collapsed .sidebar-nav {
+    display: none;
+  }
+
+  .site-sidebar.is-collapsed .sidebar-collapse {
+    align-self: center;
+    margin-top: 0;
+  }
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: calc(var(--base) * 3) calc(var(--base) * 5);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: color-mix(in srgb, var(--background) 88%, transparent);
+  color: var(--text-primary);
+  backdrop-filter: blur(12px);
+  z-index: 10;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: var(--base);
+  color: var(--text-secondary);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--primary);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 50%, transparent); }
+  50% { opacity: .5; box-shadow: 0 0 0 6px transparent; }
+}
+
+@media (max-width: 560px) {
+  .header-status { display: none; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--section-padding) calc(var(--base) * 5) calc(var(--base) * 6);
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--base);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: calc(var(--base) * 0.75) calc(var(--base) * 2);
+  margin-bottom: calc(var(--base) * 4);
+}
+
+h1 {
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: 0;
+  max-width: 66.6667%;
+  animation: reveal .8s cubic-bezier(.22,1,.36,1) both;
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--background);
+  background: linear-gradient(100deg, var(--primary), var(--accent-2));
+  padding: 0 .15em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.hero p {
+  margin-top: calc(var(--base) * 3);
+  max-width: 66.6667%;
+  color: var(--text-secondary);
+  animation: reveal .8s .12s cubic-bezier(.22,1,.36,1) both;
+}
+
+.hero p code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9em;
+  background: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: var(--r-control);
+  color: var(--text-primary);
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(20px); clip-path: inset(0 0 100% 0); }
+  to   { opacity: 1; transform: translateY(0);    clip-path: inset(0 0 0 0); }
+}
+
+/* ---------- Library panel ---------- */
+.library {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 calc(var(--base) * 5) var(--section-padding);
+}
+
+.panel {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--divider);
+}
+
+.library-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: calc(var(--base) * 2) calc(var(--base) * 3);
+  border-bottom: 1px solid var(--divider);
+  color: var(--text-secondary);
+}
+
+/* Flat grid: shared hairline dividers, no gaps, no radius */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--divider);
+}
+
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+
+.cell {
+  /* the three colour tokens every effect paints with */
+  --ink: var(--text-primary);
+  --ink-2: var(--primary);
+  --ink-3: var(--accent-2);
+  position: relative;
+  background: var(--surface);
+  padding: var(--card-padding);
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--base) * 4);
+  overflow: hidden;
+  transition: background .35s;
+  animation: reveal .7s cubic-bezier(.22,1,.36,1) both;
+}
+
+.cell:nth-child(odd) { animation-delay: .05s; }
+.cell:nth-child(3n)  { animation-delay: .1s; }
+
+.cell:hover { background: color-mix(in srgb, var(--primary) 7%, var(--surface)); }
+
+/* corner tick marks */
+.cell::before, .cell::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+}
+.cell::before {
+  top: -1px; left: -1px;
+  border-top: 1px solid var(--text-secondary);
+  border-left: 1px solid var(--text-secondary);
+}
+.cell::after {
+  bottom: -1px; right: -1px;
+  border-bottom: 1px solid var(--text-secondary);
+  border-right: 1px solid var(--text-secondary);
+}
+
+.cell-index {
+  position: absolute;
+  top: calc(var(--base) * 2);
+  left: calc(var(--base) * 3);
+  color: color-mix(in srgb, var(--text-secondary) 70%, var(--surface));
+}
+
+.stage {
+  height: 170px;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.cell h3 {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* ---------- Custom cursor plumbing ----------
+   Every demo is a `.cur` box. A tiny universal tracker (see index.astro)
+   writes four inherited custom properties onto the box as the pointer moves:
+     --x, --y   pointer position within the box (length)
+     --angle    direction of travel            (angle)
+     --speed    0–1 normalised pointer speed    (number)
+   The real cursor is hidden (`cursor:none`) and one or more `.cursor`
+   followers are positioned from those variables. Lag, trailing and easing
+   all come from plain CSS transitions — no per-frame JS animation. */
+
+@property --x { syntax: '<length-percentage>'; inherits: true; initial-value: 50%; }
+@property --y { syntax: '<length-percentage>'; inherits: true; initial-value: 50%; }
+@property --angle { syntax: '<angle>'; inherits: true; initial-value: 0deg; }
+@property --speed { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+.cur {
+  --c: var(--ink-2);   /* cursor primary colour  */
+  --c2: var(--ink-3);  /* cursor accent colour   */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  cursor: none;
+  touch-action: none;
+}
+
+/* "hover" affordance — fades out once the pointer is inside */
+.cur-hint {
+  color: color-mix(in srgb, var(--text-secondary) 55%, transparent);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.cur.is-active .cur-hint { opacity: 0; }
+
+/* underlying content — only revealed by the effects that act on it */
+.cur-word {
+  display: none;
+  font: 600 30px/1 "JetBrains Mono", monospace;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  pointer-events: none;
+  user-select: none;
+}
+.cur-blend .cur-word,
+.cur-spotlight .cur-word,
+.cur-magnet .cur-word { display: block; }
+
+/* the follower — positioned from --x/--y, eased with a transition */
+.cursor {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--c);
+  transform: translate(-50%, -50%);
+  transition: left 0.16s cubic-bezier(0.22, 1, 0.36, 1),
+              top 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  will-change: left, top;
+}
+
+/* ---------- The cursors ----------
+   Each cursor paints with two tokens so a copied snippet can be re-skinned:
+     --ink-2  primary accent (hot magenta)   --ink-3  secondary (electric cyan)
+   Ambient keyframes are cur-prefixed to stay collision-free. */
+
+/* 01 Nib — a compact solid dot that snaps tight to the pointer */
+.cur-dot .cursor {
+  width: 12px;
+  height: 12px;
+  transition-duration: 0.07s;
+}
+
+/* 02 Halo — a hollow ring that eases in behind the pointer */
+.cur-ring .cursor {
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border: 2px solid var(--c);
+  transition-duration: 0.28s;
+}
+
+/* 03 Inkwell — a difference-blend disc that inverts whatever it covers */
+.cur-blend { background: var(--surface); }
+.cur-blend .cur-word { color: var(--text-primary); }
+.cur-blend .cursor {
+  width: 62px;
+  height: 62px;
+  background: #fff;
+  mix-blend-mode: difference;
+  transition-duration: 0.12s;
+}
+
+/* 04 Aura — a soft blurred glow orb */
+.cur-glow .cursor {
+  width: 48px;
+  height: 48px;
+  background: radial-gradient(circle, var(--c), transparent 70%);
+  filter: blur(6px);
+  transition-duration: 0.2s;
+}
+
+/* 05 Comet — a bright head trailing a tapered tail along its motion */
+.cur-trail .cursor {
+  width: 14px;
+  height: 14px;
+  background: var(--c);
+  box-shadow: 0 0 12px var(--c);
+  transition-duration: 0.1s;
+}
+.cur-trail .cursor::after {
+  content: "";
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  width: calc(18px + var(--speed) * 64px);
+  height: 4px;
+  transform: translateY(-50%) rotate(var(--angle));
+  transform-origin: right center;
+  background: linear-gradient(to left, var(--c), transparent);
+  border-radius: 4px;
+  opacity: var(--speed);
+}
+
+/* 06 Serpent — a chain of segments chasing the pointer like a tail */
+.cur-snake .cursor {
+  width: calc(20px - var(--i) * 2px);
+  height: calc(20px - var(--i) * 2px);
+  background: color-mix(in srgb, var(--c) calc(100% - var(--i) * 11%), var(--c2));
+  transition-duration: calc(0.1s + var(--i) * 0.05s);
+  z-index: calc(10 - var(--i));
+}
+
+/* 07 Limelight — a dark veil pierced by a soft spotlight revealing content */
+.cur-spotlight { background: var(--surface); }
+.cur-spotlight .cur-word { color: var(--ink); }
+.cur-spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--surface) 90%, #000);
+  -webkit-mask: radial-gradient(120px circle at var(--x) var(--y), transparent 44px, #000 92px);
+          mask: radial-gradient(120px circle at var(--x) var(--y), transparent 44px, #000 92px);
+  pointer-events: none;
+}
+.cur-spotlight .cursor { display: none; }
+
+/* 08 Reticle — full-span hairlines that cross at the pointer */
+.cur-crosshair .cursor {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--c);
+  background: transparent;
+  transition-duration: 0.06s;
+}
+.cur-crosshair .cur-h,
+.cur-crosshair .cur-v {
+  position: absolute;
+  background: color-mix(in srgb, var(--c) 55%, transparent);
+  pointer-events: none;
+}
+.cur-crosshair .cur-h { left: 0; right: 0; height: 1px; top: var(--y); transition: top 0.06s; }
+.cur-crosshair .cur-v { top: 0; bottom: 0; width: 1px; left: var(--x); transition: left 0.06s; }
+
+/* 09 Lodestone — a ring that magnetically snaps onto a target chip */
+.cur-magnet .cur-word {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--background);
+  background: var(--c);
+  padding: 8px 16px;
+  border-radius: 9999px;
+}
+.cur-magnet .cursor {
+  width: 56px;
+  height: 56px;
+  background: transparent;
+  border: 2px dashed var(--c2);
+  transition-duration: 0.3s;
+}
+.cur-magnet.is-near .cursor {
+  left: 50%;
+  top: 50%;
+  width: 96px;
+  height: 44px;
+  border-radius: 9999px;
+  border-style: solid;
+}
+
+/* 10 Jellyroll — a blob that squashes and stretches along its motion */
+.cur-jelly .cursor {
+  width: 30px;
+  height: 30px;
+  background: var(--c);
+  transition: left 0.14s, top 0.14s, transform 0.14s;
+  transform: translate(-50%, -50%) rotate(var(--angle))
+             scale(calc(1 + var(--speed) * 0.7), calc(1 - var(--speed) * 0.4));
+}
+
+/* 11 Afterimage — staggered translucent echoes trailing the pointer */
+.cur-ghost .cursor {
+  width: 26px;
+  height: 26px;
+  background: color-mix(in srgb, var(--c) 70%, transparent);
+  opacity: calc(1 - var(--i) * 0.15);
+  transition-duration: calc(0.1s + var(--i) * 0.06s);
+  mix-blend-mode: screen;
+}
+
+/* 12 Ripple — concentric rings pulsing outward from the pointer */
+.cur-ripple .cursor { width: 10px; height: 10px; background: var(--c); transition-duration: 0.12s; }
+.cur-ripple .cursor::before,
+.cur-ripple .cursor::after {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  border: 2px solid var(--c);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: cur-ripple 1.6s ease-out infinite;
+}
+.cur-ripple .cursor::after { animation-delay: 0.8s; }
+@keyframes cur-ripple {
+  0%   { width: 10px;  height: 10px;  opacity: 0.8; }
+  100% { width: 74px; height: 74px; opacity: 0; }
+}
+
+/* 13 Tagalong — a pill label that trails a step behind the pointer */
+.cur-label .cursor.flag {
+  width: auto;
+  height: auto;
+  border-radius: 9999px;
+  background: var(--c);
+  color: var(--background);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  padding: 6px 12px;
+  white-space: nowrap;
+  transition-duration: 0.22s;
+  transform: translate(-50%, -50%) translate(16px, 16px);
+}
+
+/* 14 Loupe — a magnifier ring with a glass glare highlight */
+.cur-lens .cursor {
+  width: 46px;
+  height: 46px;
+  background: transparent;
+  border: 3px solid var(--c);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #fff 30%, transparent),
+              0 4px 12px rgba(0, 0, 0, 0.4);
+  transition-duration: 0.14s;
+}
+.cur-lens .cursor::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  width: 12px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, #fff 55%, transparent);
+  transform: rotate(-40deg);
+}
+
+/* 15 8-Bit — a chunky square that hops in stepped pixel jumps */
+.cur-pixel .cursor {
+  width: 18px;
+  height: 18px;
+  border-radius: 0;
+  background: var(--c);
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--c2) 70%, transparent);
+  image-rendering: pixelated;
+  transition: left 0.18s steps(6), top 0.18s steps(6);
+}
+
+/* 16 Nightclub — a neon ring with a hue-cycling glow */
+.cur-neon .cursor {
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: 2px solid #fff;
+  box-shadow: 0 0 4px var(--c), 0 0 16px var(--c), inset 0 0 8px var(--c);
+  animation: cur-neon 3s linear infinite;
+  transition-duration: 0.16s;
+}
+@keyframes cur-neon { to { filter: hue-rotate(360deg); } }
+
+/* 17 Metaball — two gooey blobs that merge through an SVG filter */
+.cur-goo { filter: url(#goo); }
+.cur-goo .cursor.blob {
+  width: calc(32px - var(--i) * 10px);
+  height: calc(32px - var(--i) * 10px);
+  background: var(--c);
+  transition-duration: calc(0.08s + var(--i) * 0.26s);
+}
+
+/* 18 Homing — an arrowhead that rotates to point the way it travels */
+.cur-arrow .cursor {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-radius: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 20px solid var(--c);
+  transition: left 0.1s, top 0.1s, transform 0.1s;
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) + 90deg));
+}
+
+/* 19 Overshoot — a dot that springs past the pointer and settles back */
+.cur-spring .cursor {
+  width: 20px;
+  height: 20px;
+  background: var(--c);
+  transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+              top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 20 Stardust — a twinkling star shedding a trail of sparkles */
+.cur-sparkle .cursor {
+  width: calc(15px - var(--i) * 2px);
+  height: calc(15px - var(--i) * 2px);
+  background: var(--c);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  transition-duration: calc(0.1s + var(--i) * 0.07s);
+  opacity: calc(1 - var(--i) * 0.16);
+  animation: cur-twinkle 1.2s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.15s);
+}
+@keyframes cur-twinkle {
+  0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0); }
+  50%      { transform: translate(-50%, -50%) scale(0.55) rotate(45deg); }
+}
+
+/* 21 Lighthouse — a tall vertical light beam that follows the pointer */
+.cur-beam .cursor {
+  width: 3px;
+  height: 100%;
+  top: 50%;
+  border-radius: 3px;
+  background: linear-gradient(var(--c), transparent 72%);
+  box-shadow: 0 0 20px var(--c);
+  transition: left 0.18s;
+}
+
+/* 22 Amoeba — a ring that endlessly morphs its border-radius */
+.cur-morph .cursor {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 2px solid var(--c);
+  animation: cur-morph 6s ease-in-out infinite;
+  transition-duration: 0.2s;
+}
+@keyframes cur-morph {
+  0%, 100% { border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%; }
+  50%      { border-radius: 62% 38% 40% 60% / 58% 55% 45% 42%; }
+}
+
+/* 23 Radar — a rotating targeting reticle with a sweeping arm */
+.cur-radar .cursor {
+  width: 46px;
+  height: 46px;
+  background: transparent;
+  border: 1px solid var(--c);
+  transition-duration: 0.12s;
+}
+.cur-radar .cursor::before {
+  content: "";
+  position: absolute;
+  inset: 34%;
+  border: 1px solid color-mix(in srgb, var(--c) 60%, transparent);
+  border-radius: 50%;
+}
+.cur-radar .sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--c2), transparent 60deg);
+  -webkit-mask: radial-gradient(transparent 40%, #000 41%);
+          mask: radial-gradient(transparent 40%, #000 41%);
+  animation: cur-spin 2s linear infinite;
+}
+@keyframes cur-spin { to { transform: rotate(360deg); } }
+
+/* 24 Anaglyph — magenta and cyan dots that split apart with speed */
+.cur-duo .cursor {
+  width: 22px;
+  height: 22px;
+  mix-blend-mode: screen;
+  transition: left 0.12s, top 0.12s, transform 0.12s;
+}
+.cur-duo .cursor:nth-of-type(1) {
+  background: var(--c);
+  transform: translate(-50%, -50%) translateX(calc(var(--speed) * -14px));
+}
+.cur-duo .cursor:nth-of-type(2) {
+  background: var(--c2);
+  transform: translate(-50%, -50%) translateX(calc(var(--speed) * 14px));
+}
+
+/* 25 Teletype — a blinking text I-beam caret */
+.cur-caret .cursor {
+  width: 3px;
+  height: 34px;
+  border-radius: 1px;
+  background: var(--c);
+  animation: cur-blink 1s steps(1) infinite;
+  transition-duration: 0.08s;
+}
+@keyframes cur-blink { 50% { opacity: 0; } }
+
+/* 26 Eclipse — a ring whose core fills in the faster you move */
+.cur-eclipse .cursor {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 2px solid var(--c);
+  box-shadow: inset 0 0 0 calc(var(--speed) * 18px) var(--c2);
+  transition: left 0.16s, top 0.16s, box-shadow 0.3s;
+}
+
+/* 27 Orbit — a satellite dot that orbits around the pointer */
+.cur-orbit .cursor {
+  width: 6px;
+  height: 6px;
+  background: var(--c);
+  transition-duration: 0.14s;
+}
+.cur-orbit .sat {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--c2);
+  animation: cur-orbit 1.4s linear infinite;
+}
+@keyframes cur-orbit {
+  from { transform: rotate(0deg) translateX(20px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(20px) rotate(-360deg); }
+}
+
+/* 28 Inkflow — a hue-shifting smear of segments dragged behind the pointer */
+.cur-paint .cursor {
+  width: calc(24px - var(--i) * 2px);
+  height: calc(24px - var(--i) * 2px);
+  background: var(--c);
+  filter: hue-rotate(calc(var(--i) * 40deg));
+  transition-duration: calc(0.1s + var(--i) * 0.08s);
+  mix-blend-mode: screen;
+  z-index: calc(10 - var(--i));
+}
+
+/* 29 Autofocus — four camera-style corner brackets that frame the pointer */
+.cur-focusbox .cursor {
+  width: 46px;
+  height: 46px;
+  background: transparent;
+  border: 2px solid var(--c);
+  border-radius: 3px;
+  /* keep only the four corners of the bordered box → AF brackets */
+  --m: linear-gradient(#000, #000);
+  -webkit-mask: var(--m) top left, var(--m) top right, var(--m) bottom left, var(--m) bottom right;
+          mask: var(--m) top left, var(--m) top right, var(--m) bottom left, var(--m) bottom right;
+  -webkit-mask-size: 13px 13px;
+          mask-size: 13px 13px;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  animation: cur-focus 2.4s ease-in-out infinite;
+  transition: left 0.1s, top 0.1s, transform 0.14s;
+  transform: translate(-50%, -50%) scale(calc(1 - var(--speed) * 0.18));
+}
+@keyframes cur-focus {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+
+/* 30 Datamosh — an RGB channel-split square that jitters and splits with speed */
+.cur-glitch .cursor {
+  width: 16px;
+  height: 16px;
+  border-radius: 0;
+  background: #fff;
+  mix-blend-mode: screen;
+  transition-duration: 0.06s;
+}
+.cur-glitch .cursor::before,
+.cur-glitch .cursor::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+  animation: cur-glitch 1.1s steps(2) infinite;
+}
+.cur-glitch .cursor::before {
+  background: var(--c);
+  transform: translateX(calc(-2px - var(--speed) * 7px));
+}
+.cur-glitch .cursor::after {
+  background: var(--c2);
+  transform: translateX(calc(2px + var(--speed) * 7px));
+  animation-delay: -0.55s;
+}
+@keyframes cur-glitch {
+  0%, 100% { clip-path: inset(0 0 58% 0); }
+  50%      { clip-path: inset(52% 0 0 0); }
+}
+
+/* 31 Iris — an eyeball whose pupil looks the way the pointer travels */
+.cur-eye .cursor {
+  width: 42px;
+  height: 42px;
+  background: #fff;
+  box-shadow: inset 0 0 0 2px var(--c);
+  overflow: hidden;
+  transition-duration: 0.16s;
+}
+.cur-eye .pupil {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 5px var(--c);
+  transform: translate(-50%, -50%) rotate(var(--angle))
+             translateX(calc(6px + var(--speed) * 4px)) rotate(calc(-1 * var(--angle)));
+  transition: transform 0.12s;
+}
+
+/* 32 Snap-Grid — a marker that snaps to the nearest point on a dotted grid */
+.cur-grid {
+  background:
+    radial-gradient(circle at 0 0,
+      color-mix(in srgb, var(--text-secondary) 45%, transparent) 1.5px, transparent 1.7px)
+    0 0 / 24px 24px;
+}
+.cur-grid .cursor {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background: transparent;
+  border: 2px solid var(--c);
+  left: round(var(--x), 24px);
+  top: round(var(--y), 24px);
+  transition: left 0.12s steps(3), top 0.12s steps(3);
+}
+
+/* 33 Droplet — a teardrop that rotates to point the way it travels */
+.cur-drop .cursor {
+  width: 26px;
+  height: 26px;
+  background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.6), transparent 45%), var(--c);
+  border-radius: 50% 50% 50% 0;
+  transition: left 0.14s, top 0.14s, transform 0.16s;
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) + 135deg));
+}
+
+/* 34 Bubble — an iridescent soap bubble that wobbles as it drifts */
+.cur-bubble .cursor {
+  width: 40px;
+  height: 40px;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.85), transparent 42%),
+    radial-gradient(circle at 72% 76%, color-mix(in srgb, var(--c2) 55%, transparent), transparent 50%),
+    conic-gradient(from 0deg,
+      color-mix(in srgb, var(--c) 40%, transparent),
+      color-mix(in srgb, var(--c2) 40%, transparent),
+      color-mix(in srgb, var(--c) 40%, transparent));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  opacity: 0.9;
+  animation: cur-wobble 3s ease-in-out infinite;
+  transition-duration: 0.2s;
+}
+@keyframes cur-wobble {
+  0%, 100% { border-radius: 48% 52% 55% 45% / 52% 48% 52% 48%; }
+  50%      { border-radius: 52% 48% 45% 55% / 48% 52% 48% 52%; }
+}
+
+/* 35 Heartbeat — a heart cursor that beats to a double-thump rhythm */
+.cur-heart .cursor {
+  width: 32px;
+  height: 32px;
+  border-radius: 0;
+  background: var(--c);
+  clip-path: path('M16 29 C 16 29, 2 20, 2 11 C 2 6, 6 3, 10 3 C 13 3, 15 5, 16 7 C 17 5, 19 3, 22 3 C 26 3, 30 6, 30 11 C 30 20, 16 29, 16 29 Z');
+  transition: left 0.14s, top 0.14s;
+  animation: cur-beat 1s ease-in-out infinite;
+}
+@keyframes cur-beat {
+  0%, 40%, 100% { transform: translate(-50%, -50%) scale(1); }
+  20%           { transform: translate(-50%, -50%) scale(1.28); }
+  30%           { transform: translate(-50%, -50%) scale(1.12); }
+}
+
+/* 36 Chrome — a liquid-metal blob with a sliding chrome sheen */
+.cur-chrome .cursor {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(120deg,
+    #6d6d78, #ffffff, var(--c2), #2a2340, #ffffff, var(--c), #7a7a86) 0 0 / 300% 100%;
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.6);
+  animation: cur-sheen 3s linear infinite, cur-morph 5s ease-in-out infinite;
+  transition-duration: 0.18s;
+}
+@keyframes cur-sheen { to { background-position: 300% 0; } }
+
+/* 37 Wayfinder — a compass needle that turns with the direction of travel */
+.cur-compass .cursor {
+  width: 34px;
+  height: 46px;
+  border-radius: 0;
+  background: linear-gradient(to bottom, var(--c) 0 50%, var(--c2) 50% 100%);
+  clip-path: polygon(50% 0, 88% 50%, 50% 100%, 12% 50%);
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--c) 55%, transparent));
+  transition: left 0.1s, top 0.1s, transform 0.14s;
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) + 90deg))
+             scale(calc(0.86 + var(--speed) * 0.18));
+}
+.cur-compass .cursor::after {
+  content: "";
+  position: absolute;
+  inset: 9px 11px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c2) 25%, #111);
+}
+
+/* 38 Wormhole — counter-rotating portal rings that contract with speed */
+.cur-portal .cursor {
+  border-radius: 50%;
+  background: transparent;
+  border: 3px dashed var(--c);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--c) 50%, transparent),
+              inset 0 0 10px color-mix(in srgb, var(--c2) 50%, transparent);
+  animation: cur-portal-spin 2.4s linear infinite;
+  transition: left 0.18s, top 0.18s, width 0.18s, height 0.18s;
+  width: calc(48px - var(--speed) * 12px);
+  height: calc(48px - var(--speed) * 12px);
+}
+.cur-portal .cursor::before,
+.cur-portal .cursor::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+.cur-portal .cursor::before {
+  inset: 6px;
+  border: 2px dotted var(--c2);
+  animation: cur-portal-reverse 1.4s linear infinite;
+}
+.cur-portal .cursor::after {
+  inset: 15px;
+  background: var(--c);
+  box-shadow: 0 0 12px var(--c);
+}
+@keyframes cur-portal-spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes cur-portal-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+/* 39 Confetti — colourful paper strips fanning out behind the pointer */
+.cur-confetti .cursor {
+  --spread: calc((var(--i) - 3) * 10deg);
+  width: 5px;
+  height: 14px;
+  border-radius: 2px;
+  color: hsl(calc(185 + var(--i) * 32) 95% 65%);
+  background: currentColor;
+  opacity: calc(1 - var(--i) * 0.09);
+  transition: left calc(0.07s + var(--i) * 0.045s),
+              top calc(0.07s + var(--i) * 0.045s),
+              transform 0.14s;
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) + 90deg + var(--spread)))
+             translateY(calc(var(--i) * 5px + var(--speed) * var(--i) * 4px));
+  box-shadow: 0 0 5px currentColor;
+}
+
+/* ==== end cursor effects ==== */
+
+/* ---------- Lazy loading ---------- */
+/* skip rendering work for far-offscreen cells */
+.cell {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 320px;
+}
+
+/* .cell's display:flex outranks the UA stylesheet's [hidden] rule */
+.cell[hidden] { display: none; }
+
+/* once JS enables lazy mode, animations only run while a cell is on screen */
+.lazy-enabled .cell:not(.in-view) *,
+.lazy-enabled .cell:not(.in-view) *::before,
+.lazy-enabled .cell:not(.in-view) *::after {
+  animation-play-state: paused !important;
+}
+
+.sentinel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--base) * 2);
+  padding: calc(var(--base) * 3);
+  border-top: 1px solid var(--divider);
+  color: var(--text-secondary);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--divider);
+  padding: calc(var(--base) * 4) calc(var(--base) * 5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: calc(var(--base) * 3);
+  flex-wrap: wrap;
+  color: var(--text-secondary);
+}
+
+.footer-links {
+  display: flex;
+  gap: calc(var(--base) * 3);
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+
+.footer-links a:hover,
+.footer-links a:focus-visible {
+  color: var(--text-primary);
+  border-bottom-color: currentColor;
+}
+
+.footer-badge {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  opacity: .85;
+  transition: opacity .2s;
+}
+
+.footer-badge:hover,
+.footer-badge:focus-visible {
+  opacity: 1;
+}
+
+.footer-badge img {
+  height: 38px;
+  width: auto;
+  display: block;
+}
+
+/* ---------- Clickable cell affordance ---------- */
+.cell { cursor: pointer; }
+
+.cell-actions {
+  position: absolute;
+  top: calc(var(--base) * 2);
+  right: calc(var(--base) * 3);
+  display: flex;
+  gap: calc(var(--base));
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .25s, transform .25s;
+}
+
+.cell-action {
+  color: var(--background);
+  background: var(--primary);
+  border: 0;
+  padding: 2px 6px;
+  border-radius: var(--r-control);
+  cursor: pointer;
+  pointer-events: none;
+  font-size: 12px;
+}
+
+.cell:hover .cell-actions,
+.cell:focus-visible .cell-actions { opacity: 1; transform: translateY(0); }
+
+.cell:hover .cell-action,
+.cell:focus-visible .cell-action { pointer-events: auto; }
+
+.cell-action:hover { filter: brightness(1.08); }
+
+.cell-action[data-action="prompt"] {
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 16%, var(--background));
+}
+
+.cell:focus-visible { outline: 2px solid var(--primary); outline-offset: -3px; }
+
+/* ---------- CSS modal ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  /* clamp the implicit track so the modal's unwrapped <pre> lines can't
+     inflate it past the viewport and push the dialog off-centre */
+  grid-template-columns: minmax(0, 100%);
+  place-items: center;
+  padding: calc(var(--base) * 3);
+  background: color-mix(in srgb, var(--background) 72%, transparent);
+  backdrop-filter: blur(8px);
+  animation: modal-fade .2s ease both;
+}
+.modal-overlay[hidden] { display: none; }
+
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  position: relative;
+  width: min(640px, 100%);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  animation: modal-rise .3s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes modal-rise {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* corner tick marks to match the grid cells */
+.modal::before, .modal::after {
+  content: "";
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  pointer-events: none;
+}
+.modal::before {
+  top: -1px; left: -1px;
+  border-top: 1px solid var(--primary);
+  border-left: 1px solid var(--primary);
+}
+.modal::after {
+  bottom: -1px; right: -1px;
+  border-bottom: 1px solid var(--primary);
+  border-right: 1px solid var(--primary);
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: calc(var(--base) * 2) calc(var(--base) * 3);
+  border-bottom: 1px solid var(--divider);
+}
+
+.modal-title-group {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--base) * 1.5);
+}
+
+.modal-index {
+  color: var(--background);
+  background: var(--primary);
+  padding: 2px 6px;
+  border-radius: var(--r-control);
+}
+
+.modal-title {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.modal-close {
+  appearance: none;
+  border: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text-primary);
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-control);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background .2s, border-color .2s;
+}
+.modal-close:hover { background: color-mix(in srgb, var(--text-primary) 10%, var(--surface)); }
+
+.modal-preview {
+  display: grid;
+  place-items: center;
+  padding: calc(var(--base) * 3);
+  border-bottom: 1px solid var(--divider);
+  background: color-mix(in srgb, var(--primary) 6%, var(--surface));
+  overflow: hidden;
+}
+.modal-preview .stage {
+  --ink: var(--text-primary);
+  --ink-2: var(--primary);
+  --ink-3: var(--accent-2);
+  height: 170px;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.modal-code-wrap {
+  overflow: auto;
+  background: var(--background);
+}
+
+.modal-code {
+  margin: 0;
+  padding: calc(var(--base) * 3);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--text-primary) 88%, var(--background));
+  white-space: pre;
+  tab-size: 2;
+}
+
+.modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: calc(var(--base) * 2) calc(var(--base) * 3);
+  border-top: 1px solid var(--divider);
+}
+
+.modal-hint { color: var(--text-secondary); }
+
+.modal-copy {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  background: var(--primary);
+  color: var(--background);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: calc(var(--base) * 1.25) calc(var(--base) * 2.5);
+  border-radius: var(--r-control);
+  transition: filter .2s, background .2s, color .2s;
+}
+.modal-copy:hover { filter: brightness(1.08); }
+.modal-copy.copied { background: var(--text-primary); color: var(--background); }
+
+@media (max-width: 560px) {
+  .modal-title { font-size: 11px; }
+  .modal-code { font-size: 11px; }
+}
+
+@media (max-width: 860px) {
+  .site-sidebar {
+    position: sticky;
+    top: 0;
+    width: auto;
+    max-height: none;
+    padding: calc(var(--base) * 2);
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: calc(var(--base) * 2);
+    overflow: visible;
+  }
+
+  .sidebar-brand {
+    min-width: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .sidebar-collapse {
+    display: none;
+  }
+
+  .sidebar-toggle {
+    appearance: none;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-content: center;
+    gap: 5px;
+    align-self: center;
+    background: linear-gradient(135deg, var(--primary), var(--accent-2));
+    color: var(--background);
+    border: 0;
+    border-radius: var(--r-control);
+    cursor: pointer;
+  }
+
+  .sidebar-toggle span {
+    width: 18px;
+    height: 2px;
+    display: block;
+    background: currentColor;
+    border-radius: var(--r-pill);
+    transition: transform .2s, opacity .2s;
+  }
+
+  .site-sidebar.is-open .sidebar-toggle span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .site-sidebar.is-open .sidebar-toggle span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .site-sidebar.is-open .sidebar-toggle span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .sidebar-nav {
+    grid-column: 1 / -1;
+    max-height: 55vh;
+    overflow-y: auto;
+    padding-top: calc(var(--base) * 1.5);
+    border-top: 1px solid var(--border);
+  }
+
+  .site-sidebar.menu-enhanced .sidebar-nav {
+    max-height: 0;
+    padding-top: 0;
+    border-top: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
+  .site-sidebar.menu-enhanced.is-open .sidebar-nav {
+    max-height: none;
+    padding-top: calc(var(--base) * 1.5);
+    border-top: 1px solid var(--border);
+    visibility: visible;
+  }
+
+  .site-sidebar.menu-enhanced.is-open {
+    position: fixed;
+    inset: 0;
+    align-content: start;
+    overflow-y: auto;
+  }
+
+  .sidebar-nav a {
+    min-height: 38px;
+  }
+
+  .page-shell {
+    margin-left: 0;
+  }
+
+  .site-header {
+    position: static;
+  }
+
+  h1,
+  .hero p {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-header,
+  .hero,
+  .library,
+  .site-footer {
+    padding-left: calc(var(--base) * 2);
+    padding-right: calc(var(--base) * 2);
+  }
+
+  .sidebar-brand strong {
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
